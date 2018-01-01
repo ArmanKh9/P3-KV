@@ -124,10 +124,10 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
 		// transforming coordinates of observations(measurements) of car to each particle
 		for (int j = 0; j < obs.size(); ++j){
-			x_m = particles[i].x + (cos(particles[i].theta) * obs[j].x) -
-						(sin(particles[i].theta) * obs[j].y);
-			y_m = particles[i].y + (sin(particles[i].theta) * obs[j].x) +
-						(cos(particles[i].theta) * obs[j].y);
+			x_m = particles[i].x + cos(particles[i].theta) * obs[j].x -
+						sin(particles[i].theta) * obs[j].y;
+			y_m = particles[i].y + sin(particles[i].theta) * obs[j].x +
+						cos(particles[i].theta) * obs[j].y;
 			obs[j].x = x_m;
 			obs[j].y = y_m;
 		}
@@ -207,6 +207,7 @@ void ParticleFilter::resample() {
 		resam.push_back(particles[index]);
 	}
 	particles = resam;
+	cout<<near_landm<<endl;
 }
 
 Particle ParticleFilter::SetAssociations(Particle& particle, const std::vector<int>& associations,
