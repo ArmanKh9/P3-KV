@@ -170,7 +170,6 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			particles[i].weight *= gauss_norm * exp(-exponent);
 		}
 	}
-	cout<<near_landm<<endl;
 }
 
 void ParticleFilter::resample() {
