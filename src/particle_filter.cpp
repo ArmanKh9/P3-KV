@@ -137,7 +137,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			float d;
 			d = sqrt(pow((map_landmarks.landmark_list[k].x_f - particles[i].x),2) + pow((map_landmarks.landmark_list[k].y_f - particles[i].y),2));
 			if (d <= sensor_range){
-				near_landm.push_back(LandmarkObs{map_landmarks.landmark_list[k].id_f ,map_landmarks.landmark_list[k].x_f,
+				near_landm.push_back(LandmarkObs{map_landmarks.landmark_list[k].id_i ,map_landmarks.landmark_list[k].x_f,
 															map_landmarks.landmark_list[k].y_f});
 			}
 		}
