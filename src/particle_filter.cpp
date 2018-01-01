@@ -133,16 +133,17 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		}
 
 		// extracting landmarks within sensor range
-		for (int k = 0; k < map_landmarks.size(); ++k){
+		for (int k = 0; k < map_landmarks.landmark_list.size(); ++k){
 			float d;
 			d = sqrt(pow((map_landmarks.landmark_list[k].x_f - particles[i].x),2) + pow((map_landmarks.landmark_list[k].y_f - particles[i].y),2));
 			if (d <= sensor_range){
-				near_landm.push_back(map_landmarks.landmark_list[k]);
+				near_landm.push_back(LandmarkObs{map_landmarks.landmark_list[k].id_f ,map_landmarks.landmark_list[k].x_f,
+															map_landmarks.landmark_list[k].y_f});
 			}
 		}
 
 		// Associating landmarks to observations
-		dataAssociation(near_landm, observations);
+		dataAssociation(near_landm, obs);
 
 		// stepping through observations to calculate their weight and eventually multiply all observation weights to
 		// get each particle weight
