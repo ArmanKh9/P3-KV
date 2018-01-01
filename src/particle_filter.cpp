@@ -26,7 +26,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	// Add random Gaussian noise to each particle.
 	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
 
-	num_particles = 120;
+	num_particles = 100;
 
 	// This creates a normal (Gaussian) distribution for x,y and theta.
 	normal_distribution<double> dist_x(x, std[0]);
@@ -194,8 +194,12 @@ void ParticleFilter::resample() {
 	// extracting max weight
 	mw = *max_element(extract_weights.begin(), extract_weights.end());
 
+
+  // uniform random distribution [0.0, max_weight)
+  uniform_real_distribution<double> unirealdist(0.0, mw);
+
 	for (int i = 0; i < particles.size(); ++i){
-		beta += uniintdist(gen) * 2.0 * mw;
+		beta += unirealdist(gen) * 2.0;
 		while(beta > particles[i].weight){
 			beta -= particles[i].weight;
 			index = (index + 1) % particles.size();
