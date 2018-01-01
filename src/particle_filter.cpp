@@ -26,7 +26,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	// Add random Gaussian noise to each particle.
 	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
 
-	num_particles = 500;
+	num_particles = 120;
 
 	// This creates a normal (Gaussian) distribution for x,y and theta.
 	normal_distribution<double> dist_x(x, std[0]);
@@ -114,7 +114,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	//   http://planning.cs.uiuc.edu/node99.html
 
 	vector<LandmarkObs> obs;
-	map near_landm;
+	vector<LandmarkObs> near_landm;
 
 	// stepping through each particle
 	for (int i = 0; i < particles.size(); ++i) {
@@ -124,43 +124,41 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
 		// transforming coordinates of observations(measurements) of car to each particle
 		for (int j = 0; j < obs.size(); ++j){
-			x_m = particle[i].x + (cos(particle[i].theta) * obs[j].x) -
-						(sin((particle[i].theta) * obs[j].y);
-			y_m = particle[i].y + (sin(particle[i].theta) * obs[j].x) +
-						(cos(particle[i].theta) * obs[j].y);
+			x_m = particles[i].x + (cos(particles[i].theta) * obs[j].x) -
+						(sin(particles[i].theta) * obs[j].y);
+			y_m = particles[i].y + (sin(particles[i].theta) * obs[j].x) +
+						(cos(particles[i].theta) * obs[j].y);
 			obs[j].x = x_m;
 			obs[j].y = y_m;
 		}
 
 		// extracting landmarks within sensor range
-		for (int k = 0; k < map_landmarks; ++k){
+		for (int k = 0; k < map_landmarks.size(); ++k){
 			float d;
-			d = sqrt(pow((map_landmarks[k].x_f - particles[i].x),2) + pow((map_landmarks[k].y_f - particles[i].y),2));
-			if (d < sensor_range){
-				near_landm.push_back(map_landmarks[k]);
+			d = sqrt(pow((map_landmarks.landmark_list[k].x_f - particles[i].x),2) + pow((map_landmarks.landmark_list[k].y_f - particles[i].y),2));
+			if (d <= sensor_range){
+				near_landm.push_back(map_landmarks.landmark_list[k]);
 			}
 		}
 
 		// Associating landmarks to observations
-		ParticleFilter::dataAssociation(near_landm, observations);
+		dataAssociation(near_landm, observations);
 
 		// stepping through observations to calculate their weight and eventually multiply all observation weights to
 		// get each particle weight
+		float mu_x;
+		float mu_y;
+		float gauss_norm;
+		float exponent;
+
 		for (int j = 0; j < obs.size(); ++j){
-			float mu_x;
-			float mu_y;
-			float gauss_norm;
-			float exponent;
-
-			x = obs[j].x;
-			y = obs[j].y;
-
 			for (int k = 0; k < near_landm.size(); ++k){
-				if (obs[j].id = near_landm[k].id_i){
-					mu_x = near_landm[k].x_f;
-					mu_y = near_landm[k].y_f;
+				if (obs[j].id = near_landm[k].id){
+					mu_x = near_landm[k].x;
+					mu_y = near_landm[k].y;
 				}
 			}
+
 			// calculate normalization term
 			gauss_norm = (1/(2 * M_PI * std_landmark[0] * std_landmark[1]));
 
@@ -193,13 +191,13 @@ void ParticleFilter::resample() {
 	}
 
 	// extracting max weight
-	mw = max_element(extract_weights.begin(), extract_weights.end());
+	mw = *max_element(extract_weights.begin(), extract_weights.end());
 
 	for (int i = 0; i < particles.size(); ++i){
 		beta += uniintdist(gen) * 2.0 * mw;
 		while(beta > particles[i].weight){
 			beta -= particles[i].weight;
-			index = (index + 1) % N;
+			index = (index + 1) % particles.size();
 		}
 		resam.push_back(particles[index]);
 	}
