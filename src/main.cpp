@@ -112,13 +112,13 @@ int main()
 
 		  // Update the weights and resample
 		  pf.updateWeights(sensor_range, sigma_landmark, noisy_observations, map);
+      cout << "particle weight" << particles[50].weight << endl;
 		  pf.resample();
 
 		  // Calculate and output the average weighted error of the particle filter over all time steps so far.
 		  vector<Particle> particles = pf.particles;
       //cout << "particle weight" << particles[50].weight << endl;
 		  int num_particles = particles.size();
-      cout<<"num of particles"<< num_particles<<endl;
 		  double highest_weight = -1.0;
 		  Particle best_particle;
 		  double weight_sum = 0.0;
