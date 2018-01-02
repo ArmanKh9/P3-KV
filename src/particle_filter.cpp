@@ -40,9 +40,9 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 		Particle sample_particle;
 
 		sample_particle.id = i;
-		sample_particle.x = dist_x(gen(rd()));
-		sample_particle.y = dist_y(gen(rd()));
-		sample_particle.theta = dist_theta(gen(rd()));
+		sample_particle.x = dist_x(gen);
+		sample_particle.y = dist_y(gen);
+		sample_particle.theta = dist_theta(gen);
 		sample_particle.weight = 1.0;
 
 		particles.push_back(sample_particle);
@@ -74,13 +74,13 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 		// add noise
 		// x
 		normal_distribution<double> pred_noise_x(particles[i].x, std_pos[0]);
-		particles[i].x = pred_noise_x(gen(rd()));
+		particles[i].x = pred_noise_x(gen);
 
 		normal_distribution<double> pred_noise_y(particles[i].y, std_pos[1]);
-		particles[i].y = pred_noise_y(gen(rd()));
+		particles[i].y = pred_noise_y(gen);
 
 		normal_distribution<double> pred_noise_theta(particles[i].theta, std_pos[2]);
-		particles[i].theta = pred_noise_theta(gen(rd()));
+		particles[i].theta = pred_noise_theta(gen);
 	}
 }
 
@@ -185,7 +185,7 @@ void ParticleFilter::resample() {
 
   // generate random starting index for resampling wheel
   uniform_int_distribution<int> uniintdist(0, num_particles-1);
-  auto index = uniintdist(gen(rd()));
+  auto index = uniintdist(gen);
 
 	// extract weights from particles
 	for (int i = 0; i < particles.size(); i++){
@@ -200,7 +200,7 @@ void ParticleFilter::resample() {
   uniform_real_distribution<double> unirealdist(0.0, mw);
 
 	for (int i = 0; i < particles.size(); i++){
-		beta += unirealdist(gen(rd())) * 2.0;
+		beta += unirealdist(gen) * 2.0;
 		while(beta > extract_weights[index]){
 			beta -= extract_weights[index];
 			index = (index + 1) % particles.size();
