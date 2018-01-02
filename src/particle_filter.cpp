@@ -55,7 +55,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	//  http://www.cplusplus.com/reference/random/default_random_engine/
 
 	// Predicting particle location using motion model
-	for (int i = 0; i < particles.size(); ++i) {
+	for (int i = 0; i < particles.size(); i++) {
 		default_random_engine gen;
 
 		// predict x and add noise
@@ -117,13 +117,13 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	vector<LandmarkObs> near_landm;
 
 	// stepping through each particle
-	for (int i = 0; i < particles.size(); ++i) {
+	for (int i = 0; i < particles.size(); i++) {
 		obs = observations;
 		float x_m;
 		float y_m;
 
 		// transforming coordinates of observations(measurements) of car to each particle
-		for (int j = 0; j < obs.size(); ++j){
+		for (int j = 0; j < obs.size(); j++){
 			x_m = particles[i].x + cos(particles[i].theta) * obs[j].x -
 						sin(particles[i].theta) * obs[j].y;
 			y_m = particles[i].y + sin(particles[i].theta) * obs[j].x +
@@ -133,7 +133,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		}
 
 		// extracting landmarks within sensor range
-		for (int k = 0; k < map_landmarks.landmark_list.size(); ++k){
+		for (int k = 0; k < map_landmarks.landmark_list.size(); k++){
 			float d;
 			d = sqrt(pow((map_landmarks.landmark_list[k].x_f - particles[i].x),2) + pow((map_landmarks.landmark_list[k].y_f - particles[i].y),2));
 			if (d <= sensor_range){
@@ -147,13 +147,13 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
 		// stepping through observations to calculate their weight and eventually multiply all observation weights to
 		// get each particle weight
-		float mu_x;
-		float mu_y;
-		float gauss_norm;
-		float exponent;
+		for (int j = 0; j < obs.size(); j++){
+			float mu_x = 1.0;
+			float mu_y = 1.0;
+			float gauss_norm = 1.0;
+			float exponent = 1.0;
 
-		for (int j = 0; j < obs.size(); ++j){
-			for (int k = 0; k < near_landm.size(); ++k){
+			for (int k = 0; k < near_landm.size(); k++){
 				if (obs[j].id = near_landm[k].id){
 					mu_x = near_landm[k].x;
 					mu_y = near_landm[k].y;
@@ -161,14 +161,13 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			}
 
 			// calculate normalization term
-			gauss_norm = (1/(2 * M_PI * std_landmark[0] * std_landmark[1]));
+			gauss_norm = 1.0/(2 * M_PI * std_landmark[0] * std_landmark[1]);
 
 			// calculate exponent
 			exponent = (pow((obs[j].x - mu_x),2))/(2 * pow(std_landmark[0],2)) + pow((obs[j].y - mu_y),2)/(2 * pow(std_landmark[1],2));
 
 			// calculate weight using normalization terms and exponent
-			//particles[i].weight *= gauss_norm * exp(-exponent);
-			particles[i].weight *= 1.0;
+			particles[i].weight *= gauss_norm * exp(-exponent);
 		}
 	}
 }
@@ -188,7 +187,7 @@ void ParticleFilter::resample() {
   auto index = uniintdist(gen);
 
 	// extract weights from particles
-	for (int i = 0; i < particles.size(); ++i){
+	for (int i = 0; i < particles.size(); i++){
 		extract_weights.push_back(particles[i].weight);
 	}
 
@@ -199,7 +198,7 @@ void ParticleFilter::resample() {
   // uniform random distribution [0.0, max_weight)
   uniform_real_distribution<double> unirealdist(0.0, mw);
 
-	for (int i = 0; i < particles.size(); ++i){
+	for (int i = 0; i < particles.size(); i++){
 		beta += unirealdist(gen) * 2.0;
 		while(beta > particles[i].weight){
 			beta -= particles[i].weight;
