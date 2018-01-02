@@ -148,8 +148,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		// stepping through observations to calculate their weight and eventually multiply all observation weights to
 		// get each particle weight
 		for (int j = 0; j < obs.size(); j++){
-			double mu_x, mu_y;
-			double o_x, o_y, s_x, s_y;
+			double o_x, o_y, s_x, s_y, mu_x, mu_y, obs_weight;
 			o_x = obs[j].x;
 			o_y = obs[j].y;
 			s_x = std_landmark[0];
@@ -162,7 +161,10 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 				}
 			}
 			// calculate weight using normalization terms and exponent
-			particles[i].weight *=( 1/(2*M_PI*s_x*s_y)) * exp( -( pow(o_x-mu_x,2)/(2*pow(s_x, 2)) + (pow(o_y-mu_y,2)/(2*pow(s_y,2))) ) );
+			obs_weight =( 1/(2*M_PI*s_x*s_y)) * exp( -( pow(o_x-mu_x,2)/(2*pow(s_x, 2)) + (pow(o_y-mu_y,2)/(2*pow(s_y,2))) ) );
+			if (obs_weight != 0){
+				particles[i].weight *= obs_weight;
+			}
 			//particles[i].weight *=( 1/(2*M_PI*s_x*s_y)) * exp( -( pow(pr_x-o_x,2)/(2*pow(s_x, 2)) + (pow(pr_y-o_y,2)/(2*pow(s_y,2))) ) )
 		}
 	}
