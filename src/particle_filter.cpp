@@ -82,13 +82,13 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
 	// NOTE: this method will NOT be called by the grading code. But you will probably find it useful to
 	//   implement this method and use it as a helper during the updateWeights phase.
 
-	double calc_diff;
+	/*double calc_diff;
 	double min_diff = 1.0e99;
 	int aux_id = -1;
 
 	for(int i=0; i<observations.size();i++){
 		for(int j=0; j<predicted.size(); j++){
-			calc_diff = sqrt(pow((predicted[j].x - observations[i].x),2) + pow((predicted[j].y - observations[i].y),2));
+			calc_diff = sqrt(pow(predicted[j].x - observations[i].x,2) + pow(predicted[j].y - observations[i].y,2));
 
 			if(calc_diff<min_diff){
 				min_diff = calc_diff;
@@ -97,6 +97,43 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
 		}
 		observations[i].id = aux_id;
 	}
+}*/
+
+
+  for (unsigned int i = 0; i < observations.size(); i++) {
+    // grab current observation
+    LandmarkObs o = observations[i];
+
+		// init minimum distance to maximum possible
+    double min_dist = numeric_limits<double>::max();
+
+    // init id of landmark from map placeholder to be associated with the observation
+    int map_id = -1;
+
+    for (unsigned int j = 0; j < predicted.size(); j++) {
+      // grab current prediction
+      LandmarkObs p = predicted[j];
+
+      // get distance between current/predicted landmarks
+      double cur_dist = dist(o.x, o.y, p.x, p.y);
+
+      // find the predicted landmark nearest the current observed landmark
+      if (cur_dist < min_dist) {
+        min_dist = cur_dist;
+        map_id = p.id;
+      }
+    }
+		   // set the observation's id to the nearest predicted landmark's id
+		   observations[i].id = map_id;
+	}
+}
+
+    // set the observation's id to the nearest predicted landmark's id
+
+    observations[i].id = map_id;
+
+  }
+
 }
 
 void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
