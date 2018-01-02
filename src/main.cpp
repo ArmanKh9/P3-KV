@@ -118,6 +118,7 @@ int main()
 		  vector<Particle> particles = pf.particles;
       //cout << "particle weight" << particles[50].weight << endl;
 		  int num_particles = particles.size();
+      cout<<"num of particles"<< num_particles<<endl;
 		  double highest_weight = -1.0;
 		  Particle best_particle;
 		  double weight_sum = 0.0;

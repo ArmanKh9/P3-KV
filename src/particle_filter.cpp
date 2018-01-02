@@ -148,7 +148,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		// stepping through observations to calculate their weight and eventually multiply all observation weights to
 		// get each particle weight
 		for (int j = 0; j < obs.size(); j++){
-			float mu_x, mu_y;
+			double mu_x, mu_y;
 			double o_x, o_y, s_x, s_y;
 			o_x = obs[j].x;
 			o_y = obs[j].y;
@@ -174,9 +174,9 @@ void ParticleFilter::resample() {
 	//   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
 
 	vector<Particle> resam;
-	float beta = 0.0;
-	vector<float> extract_weights;
-	float mw;
+	double beta = 0.0;
+	vector<double> extract_weights;
+	double mw;
 
   // generate random starting index for resampling wheel
   uniform_int_distribution<int> uniintdist(0, num_particles-1);
