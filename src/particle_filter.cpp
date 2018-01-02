@@ -161,9 +161,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			}
 			// calculate weight using normalization terms and exponent
 			obs_weight =( 1/(2*M_PI*s_x*s_y)) * exp( -( pow(o_x-mu_x,2)/(2*pow(s_x, 2)) + (pow(o_y-mu_y,2)/(2*pow(s_y,2))) ) );
-			if (obs_weight != 0){
-				particles[i].weight *= obs_weight;
-			}
+			particles[i].weight *= obs_weight;
 		}
 	}
 }
