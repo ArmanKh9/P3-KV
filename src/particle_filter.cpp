@@ -58,7 +58,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	for (int i = 0; i < particles.size(); i++) {
 		default_random_engine gen;
 
-		if (yaw_rate>0.1){
+		if (yaw_rate>90){
 			// predict x, y and theta
 			particles[i].x = particles[i].x + (velocity / yaw_rate)*(sin(particles[i].theta + yaw_rate * delta_t) - sin(particles[i].theta));
 			particles[i].y = particles[i].y + (velocity / yaw_rate)*(cos(particles[i].theta) - cos(particles[i].theta + yaw_rate * delta_t));
