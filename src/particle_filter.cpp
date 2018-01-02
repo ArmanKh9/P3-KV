@@ -83,7 +83,7 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
 	//   implement this method and use it as a helper during the updateWeights phase.
 
 	double calc_diff;
-	double min_diff = 100000000000;
+	double min_diff = 1.0e99;
 	int aux_id = -1;
 
 	for(int i=0; i<observations.size();i++){
