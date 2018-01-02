@@ -177,9 +177,9 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		sum_w += particles[i].weight;
 	}
 	cout<<"sum"<< sum_w<<endl;
-	for (int i=0; i<particles.size(); i++){
+	/*for (int i=0; i<particles.size(); i++){
 		particles[i].weight = particles[i].weight/sum_w;
-	}
+	}*/
 }
 
 void ParticleFilter::resample() {
