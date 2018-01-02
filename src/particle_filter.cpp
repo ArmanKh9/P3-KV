@@ -59,15 +59,14 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 		default_random_engine gen;
 
 		// predict x and add noise
-		particles[i].x = particles[i].x + (velocity / yaw_rate)*(sin(particles[i].theta + yaw_rate * delta_t) -
-										sin(particles[i].theta));
+		particles[i].x = particles[i].x + (velocity / yaw_rate)*(sin(particles[i].theta + yaw_rate * delta_t) - sin(particles[i].theta));
 		normal_distribution<double> pred_noise_x(particles[i].x, std_pos[0]);
 		particles[i].x = pred_noise_x(gen);
 
 		// predict y and add noise
 		particles[i].y = particles[i].y + (velocity / yaw_rate)*(cos(particles[i].theta) - cos(particles[i].theta + yaw_rate * delta_t));
 		normal_distribution<double> pred_noise_y(particles[i].y, std_pos[1]);
-		particles[i].theta = pred_noise_y(gen);
+		particles[i].y = pred_noise_y(gen);
 
 		// predict theta and add noise
 		particles[i].theta = particles[i].theta + yaw_rate * delta_t;
