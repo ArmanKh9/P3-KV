@@ -19,7 +19,7 @@
 
 using namespace std;
 random_device rd;
-default_random_engine gen(rd());
+default_random_engine gen;
 
 
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
