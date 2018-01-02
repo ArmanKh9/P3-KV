@@ -146,6 +146,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 				near_landm.push_back(LandmarkObs{map_landmarks.landmark_list[k].id_i ,map_landmarks.landmark_list[k].x_f, map_landmarks.landmark_list[k].y_f});
 			}
 		}
+		cout<<"near land size"<< near_landm.size()<<endl;
 
 		// Associating landmarks to observations
 		dataAssociation(near_landm, obs);
