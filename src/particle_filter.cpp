@@ -67,7 +67,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 			// predict x, y and theta
 			particles[i].x = particles[i].x + velocity * cos(particles[i].theta) * delta_t;
 			particles[i].y = particles[i].y + velocity * sin(particles[i].theta) * delta_t;
-			particles[i].theta = particles[i].theta + yaw_rate * delta_t;
+
 		}
 
 		// add noise
@@ -146,7 +146,6 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 				near_landm.push_back(LandmarkObs{map_landmarks.landmark_list[k].id_i ,map_landmarks.landmark_list[k].x_f, map_landmarks.landmark_list[k].y_f});
 			}
 		}
-		cout<<"near land size"<< near_landm.size()<<endl;
 
 		// Associating landmarks to observations
 		dataAssociation(near_landm, obs);
