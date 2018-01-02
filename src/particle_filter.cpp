@@ -148,10 +148,12 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		// stepping through observations to calculate their weight and eventually multiply all observation weights to
 		// get each particle weight
 		for (int j = 0; j < obs.size(); j++){
-			float mu_x = 1.0;
-			float mu_y = 1.0;
-			float gauss_norm = 1.0;
-			float exponent = 1.0;
+			float mu_x, mu_y;
+			double o_x, o_y, s_x, s_y;
+			o_x = obs[j].x;
+			o_y = obs[j].y;
+			s_x = std_landmark[0];
+			s_y = std_landmark[1];
 
 			for (int k = 0; k < near_landm.size(); k++){
 				if (obs[j].id = near_landm[k].id){
@@ -159,16 +161,9 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 					mu_y = near_landm[k].y;
 				}
 			}
-
-			// calculate normalization term
-			//gauss_norm = 1.0/(2 * M_PI * std_landmark[0] * std_landmark[1]);
-
-			// calculate exponent
-			//exponent = (pow((obs[j].x - mu_x),2))/(2 * pow(std_landmark[0],2)) + pow((obs[j].y - mu_y),2)/(2 * pow(std_landmark[1],2));
-
 			// calculate weight using normalization terms and exponent
-			particles[i].weight *= 1.0/(2 * M_PI * std_landmark[0] * std_landmark[1]) *
-														exp(-((pow((obs[j].x - mu_x),2))/(2 * pow(std_landmark[0],2)) + pow((obs[j].y - mu_y),2)/(2 * pow(std_landmark[1],2))));
+			particles[i].weight *=( 1/(2*M_PI*s_x*s_y)) * exp( -( pow(o_x-mu_x,2)/(2*pow(s_x, 2)) + (pow(o_y-mu_y,2)/(2*pow(s_y,2))) ) );
+			//particles[i].weight *=( 1/(2*M_PI*s_x*s_y)) * exp( -( pow(pr_x-o_x,2)/(2*pow(s_x, 2)) + (pow(pr_y-o_y,2)/(2*pow(s_y,2))) ) )
 		}
 	}
 }
