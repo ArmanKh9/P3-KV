@@ -65,8 +65,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 		particles[i].x = pred_noise_x(gen);
 
 		// predict y and add noise
-		particles[i].y = particles[i].y + (velocity / yaw_rate)*(cos(particles[i].theta) -
-										cos(particles[i].theta + yaw_rate * delta_t));
+		particles[i].y = particles[i].y + (velocity / yaw_rate)*(cos(particles[i].theta) - cos(particles[i].theta + yaw_rate * delta_t));
 		normal_distribution<double> pred_noise_y(particles[i].y, std_pos[1]);
 		particles[i].theta = pred_noise_y(gen);
 
@@ -83,8 +82,8 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
 	// NOTE: this method will NOT be called by the grading code. But you will probably find it useful to
 	//   implement this method and use it as a helper during the updateWeights phase.
 
-	float calc_diff;
-	float min_diff = 100000000000;
+	double calc_diff;
+	double min_diff = 100000000000;
 	int aux_id = -1;
 
 	for(int i=0; i<observations.size();i++){
@@ -119,26 +118,25 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	// stepping through each particle
 	for (int i = 0; i < particles.size(); i++) {
 		obs = observations;
-		float x_m;
-		float y_m;
+		double x_m;
+		double y_m;
 
 		// transforming coordinates of observations(measurements) of car to each particle
 		for (int j = 0; j < obs.size(); j++){
-			x_m = particles[i].x + cos(particles[i].theta) * obs[j].x -
-						sin(particles[i].theta) * obs[j].y;
-			y_m = particles[i].y + sin(particles[i].theta) * obs[j].x +
-						cos(particles[i].theta) * obs[j].y;
+			x_m = particles[i].x + cos(particles[i].theta) * obs[j].x - sin(particles[i].theta) * obs[j].y;
+			y_m = particles[i].y + sin(particles[i].theta) * obs[j].x + cos(particles[i].theta) * obs[j].y;
 			obs[j].x = x_m;
 			obs[j].y = y_m;
 		}
 
 		// extracting landmarks within sensor range
 		for (int k = 0; k < map_landmarks.landmark_list.size(); k++){
-			float d;
+			double d;
+
 			d = sqrt(pow((map_landmarks.landmark_list[k].x_f - particles[i].x),2) + pow((map_landmarks.landmark_list[k].y_f - particles[i].y),2));
+
 			if (d <= sensor_range){
-				near_landm.push_back(LandmarkObs{map_landmarks.landmark_list[k].id_i ,map_landmarks.landmark_list[k].x_f,
-															map_landmarks.landmark_list[k].y_f});
+				near_landm.push_back(LandmarkObs{map_landmarks.landmark_list[k].id_i ,map_landmarks.landmark_list[k].x_f, map_landmarks.landmark_list[k].y_f});
 			}
 		}
 
@@ -165,7 +163,6 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			if (obs_weight != 0){
 				particles[i].weight *= obs_weight;
 			}
-			//particles[i].weight *=( 1/(2*M_PI*s_x*s_y)) * exp( -( pow(pr_x-o_x,2)/(2*pow(s_x, 2)) + (pow(pr_y-o_y,2)/(2*pow(s_y,2))) ) )
 		}
 	}
 }
