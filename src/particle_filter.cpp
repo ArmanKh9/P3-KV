@@ -83,10 +83,11 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
 	//   implement this method and use it as a helper during the updateWeights phase.
 
 	double calc_diff;
-	double min_diff = 1.0e99;
-	int aux_id = -1;
 
 	for(int i=0; i<observations.size();i++){
+		double min_diff = 1.0e99;
+		int aux_id = -1;
+
 		for(int j=0; j<predicted.size(); j++){
 			calc_diff = sqrt(pow(predicted[j].x - observations[i].x,2) + pow(predicted[j].y - observations[i].y,2));
 
@@ -156,8 +157,6 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 				if (obs[j].id = near_landm[k].id){
 					mu_x = near_landm[k].x;
 					mu_y = near_landm[k].y;
-					cout<<"obs id, x and y"<< obs[j].id <<" "<< obs[j].x <<" "<< obs[j].y <<endl;
-					cout<<"near landmark id, x and y"<< near_landm[k].id <<" "<< mu_x <<" "<< mu_y <<endl;
 				}
 			}
 			// calculate weight using normalization terms and exponent
