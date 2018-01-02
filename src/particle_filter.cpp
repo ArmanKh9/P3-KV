@@ -200,8 +200,8 @@ void ParticleFilter::resample() {
 
 	for (int i = 0; i < particles.size(); i++){
 		beta += unirealdist(gen) * 2.0;
-		while(beta > extract_weights[index].weight){
-			beta -= extract_weights[index].weight;
+		while(beta > extract_weights[index]){
+			beta -= extract_weights[index];
 			index = (index + 1) % particles.size();
 		}
 		resam.push_back(particles[index]);
