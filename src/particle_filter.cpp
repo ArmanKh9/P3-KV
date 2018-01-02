@@ -99,7 +99,6 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
 	}
 }*/
 
-
   for (unsigned int i = 0; i < observations.size(); i++) {
     // grab current observation
     LandmarkObs o = observations[i];
@@ -125,16 +124,8 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
     }
 		   // set the observation's id to the nearest predicted landmark's id
 		   observations[i].id = map_id;
-	}
-}
-
-    // set the observation's id to the nearest predicted landmark's id
-
-    observations[i].id = map_id;
-
-  }
-
-}
+			}
+		}
 
 void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		const std::vector<LandmarkObs> &observations, const Map &map_landmarks) {
