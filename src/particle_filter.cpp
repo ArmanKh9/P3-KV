@@ -167,7 +167,8 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			exponent = (pow((obs[j].x - mu_x),2))/(2 * pow(std_landmark[0],2)) + pow((obs[j].y - mu_y),2)/(2 * pow(std_landmark[1],2));
 
 			// calculate weight using normalization terms and exponent
-			particles[i].weight *= gauss_norm * exp(-exponent);
+			//particles[i].weight *= gauss_norm * exp(-exponent);
+			particles[i].weight *= 1.0;
 		}
 	}
 }
