@@ -176,10 +176,10 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 	for (int i=0; i<particles.size(); i++){
 		sum_w += particles[i].weight;
 	}
-	cout<<"sum"<< sum_w<<endl;
+	/*cout<<"sum"<< sum_w<<endl;
 	for (int i=0; i<particles.size(); i++){
 		particles[i].weight = particles[i].weight/sum_w;
-	}
+	}*/
 }
 
 void ParticleFilter::resample() {
@@ -227,9 +227,17 @@ Particle ParticleFilter::SetAssociations(Particle& particle, const std::vector<i
     // sense_x: the associations x mapping already converted to world coordinates
     // sense_y: the associations y mapping already converted to world coordinates
 
-    particle.associations= associations;
-    particle.sense_x = sense_x;
-    particle.sense_y = sense_y;
+
+	//Clear the previous associations
+	particle.associations.clear();
+	particle.sense_x.clear();
+	particle.sense_y.clear();
+
+  particle.associations= associations;
+  particle.sense_x = sense_x;
+  particle.sense_y = sense_y;
+	
+ 	return particle;
 }
 
 string ParticleFilter::getAssociations(Particle best)
