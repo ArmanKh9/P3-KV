@@ -165,6 +165,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
     SetAssociations(particles[i], associations_id, sense_x, sense_y);
 
+		// reinit weight
 		particles[i].weight = 1.0;
 
 		// stepping through observations to calculate their weight and eventually multiply all observation weights to
