@@ -19,7 +19,7 @@
 
 using namespace std;
 random_device rd;
-default_random_engine gen(rd());
+default_random_engine gen;
 
 
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
@@ -72,7 +72,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 			// predict x, y and theta
 			particles[i].x += velocity * cos(particles[i].theta) * delta_t;
 			particles[i].y += velocity * sin(particles[i].theta) * delta_t;
-			particles[i].theta += yaw_rate * delta_t;
+			//particles[i].theta += yaw_rate * delta_t;
 
 		}
 
@@ -178,7 +178,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			s_y = std_landmark[1];
 
 			for (int k = 0; k < near_landm.size(); k++){
-				if (obs[j].id = near_landm[k].id){
+				if (obs[j].id == near_landm[k].id){
 					mu_x = near_landm[k].x;
 					mu_y = near_landm[k].y;
 				}
