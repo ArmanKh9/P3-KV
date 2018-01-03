@@ -19,7 +19,7 @@
 
 using namespace std;
 random_device rd;
-default_random_engine gen(rd());
+default_random_engine gen;
 
 
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
@@ -28,7 +28,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	// Add random Gaussian noise to each particle.
 	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
 
-	num_particles = 100;
+	num_particles = 50;
 
 	// This creates a normal (Gaussian) distribution for x,y and theta.
 	normal_distribution<double> dist_x(x, std[0]);
@@ -56,6 +56,10 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	//  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
 	//  http://www.cplusplus.com/reference/random/default_random_engine/
 
+		normal_distribution<double> pred_noise_x(0, std_pos[0]);
+		normal_distribution<double> pred_noise_y(0, std_pos[1]);
+		normal_distribution<double> pred_noise_theta(0, std_pos[2]);
+
 	// Predicting particle location using motion model
 	for (int i = 0; i < particles.size(); i++) {
 
@@ -74,14 +78,9 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 
 		// add noise
 		// x
-		normal_distribution<double> pred_noise_x(particles[i].x, std_pos[0]);
-		particles[i].x = pred_noise_x(gen);
-
-		normal_distribution<double> pred_noise_y(particles[i].y, std_pos[1]);
-		particles[i].y = pred_noise_y(gen);
-
-		normal_distribution<double> pred_noise_theta(particles[i].theta, std_pos[2]);
-		particles[i].theta = pred_noise_theta(gen);
+		particles[i].x += pred_noise_x(gen);
+		particles[i].y += pred_noise_y(gen);
+		particles[i].theta += pred_noise_theta(gen);
 	}
 }
 
