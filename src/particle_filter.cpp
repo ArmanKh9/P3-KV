@@ -59,15 +59,15 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	// Predicting particle location using motion model
 	for (int i = 0; i < particles.size(); i++) {
 
-		if (yaw_rate>0.001){
+		if (fabs(yaw_rate)>0.000001){
 			// predict x, y and theta
-			particles[i].x = particles[i].x + (velocity / yaw_rate)*(sin(particles[i].theta + yaw_rate * delta_t) - sin(particles[i].theta));
-			particles[i].y = particles[i].y + (velocity / yaw_rate)*(cos(particles[i].theta) - cos(particles[i].theta + yaw_rate * delta_t));
-			particles[i].theta = particles[i].theta + yaw_rate * delta_t;
+			particles[i].x += (velocity / yaw_rate)*(sin(particles[i].theta + yaw_rate * delta_t) - sin(particles[i].theta));
+			particles[i].y += (velocity / yaw_rate)*(cos(particles[i].theta) - cos(particles[i].theta + yaw_rate * delta_t));
+			particles[i].theta += yaw_rate * delta_t;
 		} else {
 			// predict x, y and theta
-			particles[i].x = particles[i].x + velocity * cos(particles[i].theta) * delta_t;
-			particles[i].y = particles[i].y + velocity * sin(particles[i].theta) * delta_t;
+			particles[i].x += velocity * cos(particles[i].theta) * delta_t;
+			particles[i].y += velocity * sin(particles[i].theta) * delta_t;
 
 		}
 
