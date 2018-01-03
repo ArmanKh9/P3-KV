@@ -19,7 +19,7 @@
 
 using namespace std;
 random_device rd;
-default_random_engine gen(rd());
+default_random_engine gen;
 
 
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
@@ -184,7 +184,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 				}
 			}
 			// calculate weight using normalization terms and exponent
-			obs_weight =( 1/(2*M_PI*s_x*s_y)) * exp( -( pow(o_x-mu_x,2)/(2*pow(s_x, 2)) + (pow(o_y-mu_y,2)/(2*pow(s_y,2))) ) );
+			obs_weight =( 1.0/(2*M_PI*s_x*s_y)) * exp( -1.0*( pow(o_x-mu_x,2)/(2*pow(s_x, 2)) + (pow(o_y-mu_y,2)/(2*pow(s_y,2))) ) );
 			particles[i].weight *= obs_weight;
 		}
 	}
@@ -198,6 +198,7 @@ void ParticleFilter::resample() {
 	vector<Particle> resam;
 	double beta = 0.0;
 	vector<double> extract_weights;
+	extract_weights.clear();
 	double mw;
 
   // generate random starting index for resampling wheel
@@ -212,8 +213,7 @@ void ParticleFilter::resample() {
 	// extracting max weight
 	mw = *max_element(extract_weights.begin(), extract_weights.end());
 
-
-  // uniform random distribution [0.0, max_weight)
+  // uniform random distribution [0.0, mw]
   uniform_real_distribution<double> unirealdist(0.0, mw);
 
 	for (int i = 0; i < particles.size(); i++){
