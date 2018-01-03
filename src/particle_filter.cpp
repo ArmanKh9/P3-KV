@@ -152,6 +152,20 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		// Associating landmarks to observations
 		dataAssociation(near_landm, obs);
 
+
+    //Set Association Test
+    vector<int> associations_id;
+    vector<double> sense_x;
+    vector<double> sense_y;
+
+    for (int t = 0; t < obs.size(); t++){
+        associations_id.push_back(obs[t].id);
+        sense_x.push_back(obs[t].x);
+        sense_y.push_back(obs[t].y);
+    }
+
+    SetAssociations(particles[i], associations_id, sense_x, sense_y);
+
 		// stepping through observations to calculate their weight and eventually multiply all observation weights to
 		// get each particle weight
 		for (int j = 0; j < obs.size(); j++){
@@ -172,14 +186,6 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			particles[i].weight *= obs_weight;
 		}
 	}
-	double sum_w = 0.0;
-	for (int i=0; i<particles.size(); i++){
-		sum_w += particles[i].weight;
-	}
-	/*cout<<"sum"<< sum_w<<endl;
-	for (int i=0; i<particles.size(); i++){
-		particles[i].weight = particles[i].weight/sum_w;
-	}*/
 }
 
 void ParticleFilter::resample() {
@@ -236,7 +242,7 @@ Particle ParticleFilter::SetAssociations(Particle& particle, const std::vector<i
   particle.associations= associations;
   particle.sense_x = sense_x;
   particle.sense_y = sense_y;
-	
+
  	return particle;
 }
 
